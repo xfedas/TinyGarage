@@ -1,0 +1,4 @@
+﻿/.vs
+/TinyGarage.Api/bin/Debug/net8.0
+/TinyGarage.Api/obj
+/.editorconfig
