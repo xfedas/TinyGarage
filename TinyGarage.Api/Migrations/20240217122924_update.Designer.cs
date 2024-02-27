@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TinyGarage.Models;
 
@@ -11,9 +12,11 @@ using TinyGarage.Models;
 namespace TinyGarage.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240217122924_update")]
+    partial class update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,6 +233,7 @@ namespace TinyGarage.Api.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedById")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -251,6 +255,7 @@ namespace TinyGarage.Api.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("OwnerId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -281,6 +286,7 @@ namespace TinyGarage.Api.Migrations
                         .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("CreatedById")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -331,6 +337,7 @@ namespace TinyGarage.Api.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedById")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -363,6 +370,7 @@ namespace TinyGarage.Api.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedById")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -394,6 +402,7 @@ namespace TinyGarage.Api.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedById")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -487,7 +496,9 @@ namespace TinyGarage.Api.Migrations
 
                     b.HasOne("TinyGarage.Models.ApplicationUser", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById");
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TinyGarage.Models.Garage", "Garage")
                         .WithMany("Cars")
@@ -497,7 +508,9 @@ namespace TinyGarage.Api.Migrations
 
                     b.HasOne("TinyGarage.Models.ApplicationUser", "Owner")
                         .WithMany()
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CarModel");
 
@@ -512,7 +525,9 @@ namespace TinyGarage.Api.Migrations
                 {
                     b.HasOne("TinyGarage.Models.ApplicationUser", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById");
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TinyGarage.Models.Manufacturer", "Manufacturer")
                         .WithMany()
@@ -537,7 +552,9 @@ namespace TinyGarage.Api.Migrations
                 {
                     b.HasOne("TinyGarage.Models.ApplicationUser", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById");
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CreatedBy");
                 });
@@ -546,7 +563,9 @@ namespace TinyGarage.Api.Migrations
                 {
                     b.HasOne("TinyGarage.Models.ApplicationUser", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById");
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CreatedBy");
                 });
@@ -555,7 +574,9 @@ namespace TinyGarage.Api.Migrations
                 {
                     b.HasOne("TinyGarage.Models.ApplicationUser", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById");
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TinyGarage.Models.Manufacturer", "Manufacturer")
                         .WithMany("ModelCollections")

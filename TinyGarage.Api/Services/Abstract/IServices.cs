@@ -5,33 +5,33 @@ namespace TinyGarage.Api.Services.Abstract
 {
     public interface ICarService : IEntityService<Car>
     {
-        void Update(CarBindingModel entity);
-        void Create(CarCreateBindingModel entity);
+        Task<Guid?> Create(CarCreateBindingModel entity);
+        Task<Guid?> Update(Car entity);
     }
 
     public interface IModelService : IEntityService<CarModel>
     {
-        void Create(CarModelCreateBindingModel entity);
-        void Update(CarModelBindingModel entity);
+        Task<Guid?> Create(CarModelCreateBindingModel entity);
+        Task<Guid?> Update(CarModel entity);
     }
 
     public interface ICollectionService : IEntityService<ModelCollection>
     {
-        void Create(ModelCollectionCreateBindingModel entity);
-        void Update(ModelCollectionBindingModel entity);
+        Task<Guid?> Create(ModelCollectionCreateBindingModel entity);
+        Task<Guid?> Update(ModelCollection entity);
     }
 
     public interface IManufacturerService : IEntityService<Manufacturer>
     {
-        void Create(ManufacturerCreateBindingModel entity);
-        void Update(ManufacturerBindingModel entity);
+        Task<Guid?> Create(ManufacturerCreateBindingModel entity);
+        Task<Guid?> Update(Manufacturer entity);
 
     }
 
     public interface IGarageService : IEntityService<Garage>
     {
-        void Create(GarageCreateBindingModel entity);
-        void Update(GarageBindingModel entity);
+        Task<Guid?> Create(GarageCreateBindingModel entity);
+        Task<Guid?> Update(Garage entity);
 
     }
 }

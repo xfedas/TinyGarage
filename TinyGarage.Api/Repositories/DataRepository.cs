@@ -15,19 +15,22 @@ namespace TinyGarage.Repositories
             _context = context;
         }
 
-        public void Create<T>(T entity) where T : BaseModel
+        public async Task Create<T>(T entity) where T : BaseModel
         {   
-            _context.Set<T>().Add(entity);
+            await _context.Set<T>().AddAsync(entity);
+            await Save();
         }   
 
-        public async void Delete<T>(Guid id) where T : BaseModel
+        public async Task Delete<T>(Guid id) where T : BaseModel
         {
             T? entity = await _context.Set<T>().FindAsync(id);
             if (entity != null)
             {
                 entity.IsDeleted = true;
-                Update<T>(entity);
+                await Update<T>(entity);
             }
+
+            await Save();
         }
 
         public async Task<T?> Get<T>(Guid id) where T : BaseModel
@@ -35,18 +38,19 @@ namespace TinyGarage.Repositories
             return await _context.Set<T>().FindAsync(id);
         }
 
-        public IQueryable<T?> GetAll<T>() where T : BaseModel
+        public IQueryable<T> GetAll<T>() where T : BaseModel
         {
             return _context.Set<T>().AsQueryable();
         }
 
-        public void Update<T>(T entity) where T : BaseModel
+        public async Task Update<T>(T entity) where T : BaseModel
         {
             _context.Set<T>().Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
+            await Save();
         }
 
-        public async void Save()
+        internal async Task Save()
         {
             await _context.SaveChangesAsync();
         }

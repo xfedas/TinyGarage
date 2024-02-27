@@ -21,7 +21,7 @@ namespace TinyGarage.Server.BindingModels
             Id = garageEntity.Id;
             Name = garageEntity.Name;   
             Description = garageEntity.Description;
-            Author = garageEntity.CreatedBy.UserName;
+            //Author = garageEntity.CreatedBy.UserName;
             CreatedDate = garageEntity.CreatedDate;
         }
     }

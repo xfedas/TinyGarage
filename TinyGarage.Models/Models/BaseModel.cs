@@ -9,11 +9,11 @@ namespace TinyGarage.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
-        public string CreatedById { get; set; }
+        public string? CreatedById { get; set; }
         public bool IsDeleted { get; set; }
 
         [ForeignKey("CreatedById")]
-        public virtual ApplicationUser CreatedBy { get; set; }
+        public virtual ApplicationUser? CreatedBy { get; set; }
 
     }
 }

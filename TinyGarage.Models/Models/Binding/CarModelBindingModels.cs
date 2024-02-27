@@ -34,7 +34,7 @@ namespace TinyGarage.Server.BindingModels
             Color = model.Color;
             Description = model.Description;
             CreatedDate = model.CreatedDate;
-            Author = model.CreatedBy.UserName;
+            //Author = model.CreatedBy.UserName;
         }
     }
 

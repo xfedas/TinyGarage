@@ -1,13 +1,15 @@
 ﻿using TinyGarage.Models;
 using TinyGarage.Repositories;
+using TinyGarage.Repositories.Abstract;
 
 public class EntityService<TEntity> : IEntityService<TEntity> where TEntity : BaseModel
 {
-    internal readonly DataRepository _repository;
+    internal readonly IDataRepository _repository;
     internal readonly IHttpContextAccessor _httpContextAccessor;
-    internal ApplicationUser CurrentUser => _repository.GetUser(_httpContextAccessor.HttpContext?.User.Identity.Name);
+    internal ApplicationUser CurrentUser => throw new NotImplementedException();
+        //_repository.GetUser(_httpContextAccessor.HttpContext?.User.Identity.Name);
 
-    public EntityService(DataRepository repository, IHttpContextAccessor httpContextAccessor)
+    public EntityService(IDataRepository repository, IHttpContextAccessor httpContextAccessor)
     {
         _repository = repository;
         _httpContextAccessor = httpContextAccessor;
@@ -24,8 +26,8 @@ public class EntityService<TEntity> : IEntityService<TEntity> where TEntity : Ba
     }
 
 
-    public void Delete(Guid id)
+    public async Task Delete(Guid id)
     {
-        _repository.Delete<TEntity>(id);
+        await _repository.Delete<TEntity>(id);
     }
 }

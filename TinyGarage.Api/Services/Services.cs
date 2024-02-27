@@ -1,18 +1,14 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Http.HttpResults;
-using TinyGarage.Api.Services.Abstract;
+﻿using TinyGarage.Api.Services.Abstract;
 using TinyGarage.Models;
-using TinyGarage.Repositories;
+using TinyGarage.Repositories.Abstract;
 using TinyGarage.Server.BindingModels;
 
 namespace TinyGarage.Api.Services
 {
-    public class CarService(DataRepository repository, IHttpContextAccessor httpContextAccessor) : EntityService<Car>(repository, httpContextAccessor), ICarService
+    public class CarService(IDataRepository repository, IHttpContextAccessor httpContextAccessor) : EntityService<Car>(repository, httpContextAccessor), ICarService
     {
-        public async void Create(CarCreateBindingModel model)
+        public async Task<Guid?> Create(CarCreateBindingModel model)
         {
-            var owner = CurrentUser;
-
             Car entity = new Car()
             {
                 Id = Guid.NewGuid(),
@@ -22,15 +18,23 @@ namespace TinyGarage.Api.Services
                 Notes = model.Notes,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false,
-                CreatedBy = owner,
-                Owner = owner,
+                Owner = null,
+                CreatedBy = null
             };
 
-            _repository.Create(entity);
-            _repository.Save();
+            try
+            {
+                await _repository.Create(entity);
+                return entity.Id;
+            }
+            catch (Exception)
+            {
+            }
+
+            return null;
         }
 
-        public async void Update(CarBindingModel model)
+        public async Task<Guid?> Update(Car model)
         {
             var entity = await _repository.Get<Car>(model.Id);
 
@@ -41,19 +45,23 @@ namespace TinyGarage.Api.Services
                 entity.Garage = await _repository.Get<Garage>(model.Garage.Id);
                 entity.Notes = model.Notes;
 
-                _repository.Update(entity);
-                _repository.Save();
+                try
+                {
+                    await _repository.Update(entity);
+                    return entity.Id;
+                }
+                catch (Exception)
+                {
+                }
             }
-            else
-            {
-                throw new Exception($"Entity to be updated not found. Id: ${model.Id}");
-            }
+
+            return null;
         }
     }
 
-    public class ModelService(DataRepository repository, IHttpContextAccessor httpContextAccessor) : EntityService<CarModel>(repository, httpContextAccessor), IModelService
+    public class ModelService(IDataRepository repository, IHttpContextAccessor httpContextAccessor) : EntityService<CarModel>(repository, httpContextAccessor), IModelService
     {
-        public async void Create(CarModelCreateBindingModel model)
+        public async Task<Guid?> Create(CarModelCreateBindingModel model)
         {
             CarModel entity = new CarModel()
             {
@@ -68,14 +76,22 @@ namespace TinyGarage.Api.Services
                 CreatedDate = DateTime.Now,
                 IsDeleted = false,
                 Year = model.Year,
-                CreatedBy = CurrentUser
+                CreatedBy = null
             };
 
-            _repository.Create(entity);
-            _repository.Save();
+            try
+            {
+                await _repository.Create(entity);
+                return entity.Id;
+            }
+            catch (Exception)
+            {
+            }
+
+            return null;
         }
 
-        public async void Update(CarModelBindingModel model)
+        public async Task<Guid?> Update(CarModel model)
         {
             var entity = await _repository.Get<CarModel>(model.Id);
 
@@ -95,20 +111,24 @@ namespace TinyGarage.Api.Services
                     entity.Manufacturer = manufacturer;
                     entity.Year = model.Year;
 
-                    _repository.Update(entity);
-                    _repository.Save();
+                    try
+                    {
+                        await _repository.Update(entity);
+                        return entity.Id;
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
             }
-            else
-            {
-                throw new Exception($"Entity to be updated not found. Id: ${model.Id}");
-            }
+
+            return null;
         }
     }
 
-    public class CollectionService(DataRepository repository, IHttpContextAccessor httpContextAccessor) : EntityService<ModelCollection>(repository, httpContextAccessor), ICollectionService
+    public class CollectionService(IDataRepository repository, IHttpContextAccessor httpContextAccessor) : EntityService<ModelCollection>(repository, httpContextAccessor), ICollectionService
     {
-        public async void Create(ModelCollectionCreateBindingModel model)
+        public async Task<Guid?> Create(ModelCollectionCreateBindingModel model)
         {
             ModelCollection entity = new ModelCollection()
             {
@@ -117,16 +137,24 @@ namespace TinyGarage.Api.Services
                 Notes = model.Notes,
                 Manufacturer = await _repository.Get<Manufacturer>(Guid.Parse(model.ManufacturerId)),
                 TotalCount = model.TotalCount,
-                CreatedBy = CurrentUser,
+                CreatedBy = null,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false
             };
 
-            _repository.Create(entity);
-            _repository.Save();
+            try
+            {
+                await _repository.Create(entity);
+                return entity.Id;
+            }
+            catch (Exception)
+            {
+            }
+
+            return null;
         }
 
-        public async void Update(ModelCollectionBindingModel model)
+        public async Task<Guid?> Update(ModelCollection model)
         {
             var entity = await _repository.Get<ModelCollection>(model.Id);
 
@@ -140,36 +168,49 @@ namespace TinyGarage.Api.Services
                     entity.Manufacturer = manufacturer;
                     entity.TotalCount = model.TotalCount;
 
-                    _repository.Update(entity);
-                    _repository.Save();
+                    try
+                    {
+                        await _repository.Update(entity);
+                        return entity.Id;
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
             }
-            else
-            {
-                throw new Exception($"Entity to be updated not found. Id: ${model.Id}");
-            }
+
+            return null;
         }
     }
 
-    public class ManufacturerService(DataRepository repository, IHttpContextAccessor httpContextAccessor) : EntityService<Manufacturer>(repository, httpContextAccessor), IManufacturerService
+    public class ManufacturerService(IDataRepository repository, IHttpContextAccessor httpContextAccessor) : EntityService<Manufacturer>(repository, httpContextAccessor), IManufacturerService
     {
-        public void Create(ManufacturerCreateBindingModel model)
+        public async Task<Guid?> Create(ManufacturerCreateBindingModel model)
         {
             Manufacturer entity = new Manufacturer()
             {
                 Id = Guid.NewGuid(),
                 Name = model.Name,
                 Description = model.Description,
-                CreatedBy = CurrentUser,
+                CreatedBy = null,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false
             };
 
-            _repository.Create(entity);
-            _repository.Save();
+
+            try
+            {
+                await _repository.Create(entity);
+                return entity.Id;
+            }
+            catch (Exception)
+            {
+            }
+
+            return null;
         }
 
-        public async void Update(ManufacturerBindingModel model)
+        public async Task<Guid?> Update(Manufacturer model)
         {
             var entity = await _repository.Get<Manufacturer>(model.Id);
 
@@ -178,35 +219,47 @@ namespace TinyGarage.Api.Services
                 entity.Name = model.Name;
                 entity.Description = model.Description;
 
-                _repository.Update(entity);
-                _repository.Save();
+                try
+                {
+                    await _repository.Update(entity);
+                    return entity.Id;
+                }
+                catch (Exception)
+                {
+                }
             }
-            else
-            {
-                throw new Exception($"Entity to be updated not found. Id: ${model.Id}");
-            }
+
+            return null;
         }
     }
 
-    public class GarageService(DataRepository repository, IHttpContextAccessor httpContextAccessor) : EntityService<Garage>(repository, httpContextAccessor), IGarageService
+    public class GarageService(IDataRepository repository, IHttpContextAccessor httpContextAccessor) : EntityService<Garage>(repository, httpContextAccessor), IGarageService
     {
-        public void Create(GarageCreateBindingModel model)
+        public async Task<Guid?> Create(GarageCreateBindingModel model)
         {
             Garage entity = new Garage()
             {
                 Id = Guid.NewGuid(),
                 Name = model.Name,
                 Description = model.Description,
-                CreatedBy = CurrentUser,
+                CreatedBy = null,
                 CreatedDate = DateTime.Now,
                 IsDeleted = false
             };
 
-            _repository.Create(entity);
-            _repository.Save();
+            try
+            {
+                await _repository.Create(entity);
+                return entity.Id;
+            }
+            catch (Exception)
+            {
+            }
+
+            return null;
         }
 
-        public async void Update(GarageBindingModel model)
+        public async Task<Guid?> Update(Garage model)
         {
             var entity = await _repository.Get<Garage>(model.Id);
 
@@ -215,13 +268,17 @@ namespace TinyGarage.Api.Services
                 entity.Name = model.Name;
                 entity.Description = model.Description;
 
-                _repository.Update(entity);
-                _repository.Save();
+                try
+                {
+                    await _repository.Update(entity);
+                    return entity.Id;
+                }
+                catch (Exception)
+                {
+                }
             }
-            else
-            {
-                throw new Exception($"Entity to be updated not found. Id: ${model.Id}");
-            }
+
+            return null;
         }
     }
 }

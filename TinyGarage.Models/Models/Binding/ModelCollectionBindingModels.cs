@@ -26,7 +26,7 @@ namespace TinyGarage.Server.BindingModels
             TotalCount = model.TotalCount;
             Notes = model.Notes;
             CreatedDate = model.CreatedDate;
-            Author = model.CreatedBy.UserName;
+            //Author = model.CreatedBy.UserName;
         }
     }
 

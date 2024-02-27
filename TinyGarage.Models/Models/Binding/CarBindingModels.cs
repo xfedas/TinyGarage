@@ -22,8 +22,8 @@ namespace TinyGarage.Server.BindingModels
             CarModel = new CarModelBindingModel(model.CarModel);
             Garage = new GarageBindingModel(model.Garage);
             CreatedDate = model.CreatedDate;
-            Owner = model.Owner.UserName;
-            Author = model.CreatedBy.UserName;
+            //Owner = model.Owner.UserName;
+            //Author = model.CreatedBy.UserName;
         }
     }
 

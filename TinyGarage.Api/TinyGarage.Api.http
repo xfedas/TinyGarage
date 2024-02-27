@@ -1,6 +1,6 @@
 @TinyGarage.Api_HostAddress = http://localhost:5045
 
-GET {{TinyGarage.Api_HostAddress}}/weatherforecast/
+GET {{TinyGarage.Api_HostAddress}}/
 Accept: application/json
 
 ###

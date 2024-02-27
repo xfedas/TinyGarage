@@ -2,3 +2,7 @@
 /TinyGarage.Api/bin/Debug/net8.0
 /TinyGarage.Api/obj
 /.editorconfig
+/TinyGarage.Models/bin/Debug/net8.0
+/TinyGarage.Models/obj
+/TinyGarage.Web/bin/Debug/net8.0
+/TinyGarage.Web/obj

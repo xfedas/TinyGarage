@@ -1,0 +1,92 @@
+﻿@page "/garage-list"
+@using System.Net.Http.Json
+@using TinyGarage.Models
+@inject HttpClient httpClient
+
+<h3>Garage List</h3>
+
+<div class="form-group">
+    <input type="text" @bind="searchTerm" class="form-control" placeholder="Search by name" />
+</div>
+
+@if (garages == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th @onclick="@(() => Sort("id"))">ID</th>
+                <th @onclick="@(() => Sort("name"))">Name</th>
+                <th @onclick="@(() => Sort("description"))">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var garage in filteredGarages)
+            {
+                <tr>
+                    <td>@garage.Id</td>
+                    <td>@garage.Name</td>
+                    <td>@garage.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Garage> garages;
+    private List<Garage> sortedGarages;
+    private List<Garage> filteredGarages;
+    private string sortColumn;
+    private bool ascending = true;
+    private string searchTerm;
+
+    protected override async Task OnInitializedAsync()
+    {
+        garages = await httpClient.GetFromJsonAsync<List<Garage>>(Routes.Garage.GetAll);
+        Sort("name");
+    }
+
+    private void Sort(string column)
+    {
+        if (column == sortColumn)
+        {
+            ascending = !ascending;
+        }
+        else
+        {
+            sortColumn = column;
+            ascending = true;
+        }
+
+        switch (column)
+        {
+            case "name":
+                sortedGarages = ascending ? garages.OrderBy(g => g.Name).ToList() : garages.OrderByDescending(g => g.Name).ToList();
+                break;
+            case "description":
+                sortedGarages = ascending ? garages.OrderBy(g => g.Description).ToList() : garages.OrderByDescending(g => g.Description).ToList();
+                break;
+            default:
+                sortedGarages = garages;
+                break;
+        }
+
+        ApplySearchFilter();
+    }
+
+    private void ApplySearchFilter()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            filteredGarages = sortedGarages;
+        }
+        else
+        {
+            filteredGarages = sortedGarages.Where(g => g.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+    }
+}
