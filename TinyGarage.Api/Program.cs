@@ -52,8 +52,16 @@ builder.Services
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddAuthorization();
-builder.Services.AddAuthentication();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+        builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+    });
+
+//builder.Services.AddAuthorization();
+//builder.Services.AddAuthentication();
 #endregion
 #region DB Context
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -99,6 +107,7 @@ app.UseHttpsRedirection();
 //app.UseAuthentication();
 app.UseRouting();
 //app.UseAuthorization();
+app.UseCors("AllowAll");
 app.MapGroup("/api/account").MapIdentityApi<ApplicationUser>();
 
 #region Garage Api
@@ -111,10 +120,10 @@ app.MapGroup("/api/garage")
     });
 
 app.MapGroup("/api/garage")
-    .MapGet("/all", (IServiceProvider provider) =>
+    .MapGet("/all", async (IServiceProvider provider) =>
     {
         var service = provider.GetRequiredService<IGarageService>();
-        var garages = service.GetAll();
+        var garages = await service.GetAll();
         return Results.Ok(garages);
     });
 

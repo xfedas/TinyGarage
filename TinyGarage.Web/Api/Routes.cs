@@ -1,4 +1,4 @@
-﻿namespace TinyGarage.Web.Routes
+﻿namespace TinyGarage.Web.ApiRoutes
 { 
     public static class User
     {
@@ -13,7 +13,7 @@
         public static readonly string Delete = "/api/car/delete/{0}";
         public static readonly string GetAll = "/api/car/all";
         public static readonly string GetById = "/api/car/{0}";
-        public static readonly string Edit = "/api/car/edit";
+        public static readonly string Edit = "/api/car/update";
     }
 
     public static class Model
@@ -22,7 +22,7 @@
         public static readonly string Delete = "/api/model/delete/{0}";
         public static readonly string GetAll = "/api/model/all";
         public static readonly string GetById = "/api/model/{0}";
-        public static readonly string Edit = "/api/model/edit";
+        public static readonly string Edit = "/api/model/update";
     }
 
     public static class Manufacturer
@@ -31,7 +31,7 @@
         public static readonly string Delete = "/api/manufacturer/delete/{0}";
         public static readonly string GetAll = "/api/manufacturer/all";
         public static readonly string GetById = "/api/manufacturer/{0}";
-        public static readonly string Edit = "/api/manufacturer/edit";
+        public static readonly string Edit = "/api/manufacturer/update";
     }
 
     public static class Collection
@@ -40,7 +40,7 @@
         public static readonly string Delete = "/api/collection/delete/{0}";
         public static readonly string GetAll = "/api/collection/all";
         public static readonly string GetById = "/api/collection/{0}";
-        public static readonly string Edit = "/api/collection/edit";
+        public static readonly string Edit = "/api/collection/update";
     }
 
     public static class Garage
@@ -49,6 +49,6 @@
         public static readonly string Delete = "/api/garage/delete/{0}";
         public static readonly string GetAll = "/api/garage/all";
         public static readonly string GetById = "/api/garage/{0}";
-        public static readonly string Edit = "/api/garage/edit";
+        public static readonly string Edit = "/api/garage/update";
     }
 }

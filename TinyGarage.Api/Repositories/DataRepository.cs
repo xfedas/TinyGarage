@@ -40,7 +40,7 @@ namespace TinyGarage.Repositories
 
         public IQueryable<T> GetAll<T>() where T : BaseModel
         {
-            return _context.Set<T>().AsQueryable();
+            return _context.Set<T>().AsQueryable<T>();
         }
 
         public async Task Update<T>(T entity) where T : BaseModel

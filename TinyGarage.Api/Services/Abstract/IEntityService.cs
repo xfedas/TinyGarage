@@ -2,7 +2,7 @@
 
 public interface IEntityService<TEntity> where TEntity : BaseModel
 {
-    IQueryable<TEntity?> GetAll();
+    Task<List<TEntity>> GetAll();
     Task<TEntity?> Get(Guid id);
     Task Delete(Guid id);
 }

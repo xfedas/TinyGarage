@@ -1,4 +1,5 @@
-﻿using TinyGarage.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using TinyGarage.Models;
 using TinyGarage.Repositories;
 using TinyGarage.Repositories.Abstract;
 
@@ -15,9 +16,9 @@ public class EntityService<TEntity> : IEntityService<TEntity> where TEntity : Ba
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public IQueryable<TEntity?> GetAll()
+    public async Task<List<TEntity>> GetAll()
     {
-        return _repository.GetAll<TEntity>();
+        return await _repository.GetAll<TEntity>().ToListAsync();
     }
 
     public async Task<TEntity?> Get(Guid id)
