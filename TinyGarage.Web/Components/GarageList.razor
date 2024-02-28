@@ -5,29 +5,24 @@
 
 <h3>Garage List</h3>
 
-<div class="form-group">
-    <input type="text" @bind="searchTerm" class="form-control" placeholder="Search by name" />
-</div>
-
 @if (garages == null)
 {
     <p>Loading...</p>
 }
 else
 {
-    <table class="table">
+    <table class="table table-light table-striped table-hover">
         <thead>
             <tr>
-                <th @onclick="@(() => Sort("id"))">ID</th>
-                <th @onclick="@(() => Sort("name"))">Name</th>
-                <th @onclick="@(() => Sort("description"))">Description</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var garage in filteredGarages)
+            @foreach (var garage in garages)
             {
                 <tr>
-                    <td>@garage.Id</td>
                     <td>@garage.Name</td>
                     <td>@garage.Description</td>
                 </tr>
@@ -46,7 +41,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        garages = await httpClient.GetFromJsonAsync<List<Garage>>(Routes.Garage.GetAll);
+        garages = await httpClient.GetFromJsonAsync<List<Garage>>(ApiRoutes.Garage.GetAll);
         Sort("name");
     }
 
@@ -73,20 +68,6 @@ else
             default:
                 sortedGarages = garages;
                 break;
-        }
-
-        ApplySearchFilter();
-    }
-
-    private void ApplySearchFilter()
-    {
-        if (string.IsNullOrWhiteSpace(searchTerm))
-        {
-            filteredGarages = sortedGarages;
-        }
-        else
-        {
-            filteredGarages = sortedGarages.Where(g => g.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
         }
     }
 }
