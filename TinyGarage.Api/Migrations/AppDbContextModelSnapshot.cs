@@ -18,6 +18,9 @@ namespace TinyGarage.Api.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -490,7 +493,7 @@ namespace TinyGarage.Api.Migrations
                         .HasForeignKey("CreatedById");
 
                     b.HasOne("TinyGarage.Models.Garage", "Garage")
-                        .WithMany("Cars")
+                        .WithMany()
                         .HasForeignKey("GarageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -521,7 +524,7 @@ namespace TinyGarage.Api.Migrations
                         .IsRequired();
 
                     b.HasOne("TinyGarage.Models.ModelCollection", "ModelCollection")
-                        .WithMany("CarModels")
+                        .WithMany()
                         .HasForeignKey("ModelCollectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -558,7 +561,7 @@ namespace TinyGarage.Api.Migrations
                         .HasForeignKey("CreatedById");
 
                     b.HasOne("TinyGarage.Models.Manufacturer", "Manufacturer")
-                        .WithMany("ModelCollections")
+                        .WithMany()
                         .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -571,21 +574,6 @@ namespace TinyGarage.Api.Migrations
             modelBuilder.Entity("TinyGarage.Models.CarModel", b =>
                 {
                     b.Navigation("Cars");
-                });
-
-            modelBuilder.Entity("TinyGarage.Models.Garage", b =>
-                {
-                    b.Navigation("Cars");
-                });
-
-            modelBuilder.Entity("TinyGarage.Models.Manufacturer", b =>
-                {
-                    b.Navigation("ModelCollections");
-                });
-
-            modelBuilder.Entity("TinyGarage.Models.ModelCollection", b =>
-                {
-                    b.Navigation("CarModels");
                 });
 #pragma warning restore 612, 618
         }

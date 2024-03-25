@@ -13,7 +13,7 @@
         public static readonly string Delete = "/api/car/delete/{0}";
         public static readonly string GetAll = "/api/car/all";
         public static readonly string GetById = "/api/car/{0}";
-        public static readonly string Edit = "/api/car/update";
+        public static readonly string Update = "/api/car/update";
     }
 
     public static class Model
@@ -31,7 +31,7 @@
         public static readonly string Delete = "/api/manufacturer/delete/{0}";
         public static readonly string GetAll = "/api/manufacturer/all";
         public static readonly string GetById = "/api/manufacturer/{0}";
-        public static readonly string Edit = "/api/manufacturer/update";
+        public static readonly string Update = "/api/manufacturer/update";
     }
 
     public static class Collection
@@ -40,7 +40,7 @@
         public static readonly string Delete = "/api/collection/delete/{0}";
         public static readonly string GetAll = "/api/collection/all";
         public static readonly string GetById = "/api/collection/{0}";
-        public static readonly string Edit = "/api/collection/update";
+        public static readonly string Update = "/api/collection/update";
     }
 
     public static class Garage
@@ -49,6 +49,6 @@
         public static readonly string Delete = "/api/garage/delete/{0}";
         public static readonly string GetAll = "/api/garage/all";
         public static readonly string GetById = "/api/garage/{0}";
-        public static readonly string Edit = "/api/garage/update";
+        public static readonly string Update = "/api/garage/update";
     }
 }

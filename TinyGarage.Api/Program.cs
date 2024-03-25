@@ -17,6 +17,7 @@ using TinyGarage.Server.BindingModels;
 using System;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -66,7 +67,7 @@ builder.Services.AddCors(options =>
 #region DB Context
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 #endregion
 #region Dependency injection
@@ -80,6 +81,12 @@ builder.Services.AddScoped<ICollectionService, CollectionService>();
 builder.Services.AddScoped<IManufacturerService, ManufacturerService>();
 
 #endregion
+
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(opt =>
+{
+    opt.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
+
 var app = builder.Build();
 #region Apply pending EF migrations
 using (var scope = app.Services.CreateScope())
@@ -154,10 +161,10 @@ app.MapGroup("/api/model")
     });
 
 app.MapGroup("/api/model")
-    .MapGet("/all", (IServiceProvider provider) =>
+    .MapGet("/all", async (IServiceProvider provider) =>
     {
         var service = provider.GetRequiredService<IModelService>();
-        var models = service.GetAll();
+        var models = await service.GetAll();
         return Results.Ok(models);
     });
 
@@ -188,10 +195,10 @@ app.MapGroup("/api/car")
     });
 
 app.MapGroup("/api/car")
-    .MapGet("/all", (IServiceProvider provider) =>
+    .MapGet("/all", async (IServiceProvider provider) =>
     {
         var service = provider.GetRequiredService<ICarService>();
-        var cars = service.GetAll();
+        var cars = await service.GetAll();
         return Results.Ok(cars);
     });
 
@@ -222,10 +229,10 @@ app.MapGroup("/api/manufacturer")
     });
 
 app.MapGroup("/api/manufacturer")
-    .MapGet("/all", (IServiceProvider provider) =>
+    .MapGet("/all", async (IServiceProvider provider) =>
     {
         var service = provider.GetRequiredService<IManufacturerService>();
-        var manufacturers = service.GetAll();
+        var manufacturers = await service.GetAll();
         return Results.Ok(manufacturers);
     });
 
@@ -250,17 +257,17 @@ app.MapGroup("/api/manufacturer")
 app.MapGroup("/api/collection")
     .MapGet("/{guid}", async (string guid, IServiceProvider provider) =>
     {
-        var service = provider.GetRequiredService<ICarService>();
+        var service = provider.GetRequiredService<ICollectionService>();
         var collection = await service.Get(Guid.Parse(guid));
         return Results.Ok(collection);
     });
 
 app.MapGroup("/api/collection")
-    .MapGet("/all", (IServiceProvider provider) =>
+    .MapGet("/all", async (IServiceProvider provider) =>
     {
-        var service = provider.GetRequiredService<ICarService>();
-        var collections = service.GetAll();
-        return Results.Ok(collections);
+        var service = provider.GetRequiredService<ICollectionService>();
+        var collections = await service.GetAll();
+        return Results.Ok(collections != null ? collections : new List<ModelCollection>());
     });
 
 app.MapGroup("/api/collection")

@@ -17,7 +17,5 @@ namespace TinyGarage.Models
 
         [StringLength(150)]
         public string? Notes { get; set; }
-
-        public virtual ICollection<CarModel>? CarModels { get; set; }
     }
 }

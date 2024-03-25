@@ -1,0 +1,246 @@
+﻿@page "/carmodel-list"
+@using System.Net.Http.Json
+@using TinyGarage.Models
+@using TinyGarage.Server.BindingModels
+@inject HttpClient httpClient
+
+<h3>Car Models </h3>
+
+@if (models == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-sm">
+            <thead class="thead-dark">
+            <th class="align-middle">ModelCode</th>
+            <th class="align-middle">ModelName</th>
+            <th class="align-middle">Manufacturer</th>
+            <th class="align-middle">Collection</th>
+            <th class="align-middle">Year</th>
+            <th class="align-middle">CollectionOrder</th>
+            <th class="align-middle">Color</th>
+            <th class="align-middle">Description</th>
+            <th class="align-middle">Actions</th>
+            </thead>
+            <tbody>
+                @foreach (var model in models)
+                {
+                    <tr @onclick="() => EditCarModel(model)">
+                        <td>
+                            @if (model.Id == editableCarModel?.Id)
+                            {
+                                <input type="text" id="txtBox_modelCode" placeholder="Code..." @bind="editableCarModel.ModelCode" class="form-control" />
+                            }
+                            else
+                            {
+                                @model.ModelCode
+                            }
+                        </td>
+                        <td>
+                            @if (model.Id == editableCarModel?.Id)
+                            {
+                                <input type="text" id="txtBox_modelName" placeholder="Name..." @bind="editableCarModel.ModelName" class="form-control" />
+                            }
+                            else
+                            {
+                                @model.ModelName
+                            }
+                        </td>
+                        <td>
+                            @if (model.Id == editableCarModel?.Id)
+                            {
+                                <select class="form-control" id="dropdown_manufacturer" @bind="editableCarModel.ManufacturerId">
+                                    @foreach (var manufacturer in manufacturers)
+                                    {
+                                        <option value="@manufacturer.Id">@manufacturer.Name</option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                @model.Manufacturer?.Name
+                            }
+                        </td>
+                        <td>
+                            @if (model.Id == editableCarModel?.Id)
+                            {
+                                <select class="form-control"id="dropdown_collection" @bind="editableCarModel.ModelCollectionId">
+                                    @foreach (var collection in collections.Where(c => c.ManufacturerId == editableCarModel.ManufacturerId))
+                                    {
+                                        <option value="@collection.Id">@collection.Name</option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                @model.ModelCollection?.Name
+                            }
+                        </td>
+                        <td>
+                            @if (model.Id == editableCarModel?.Id)
+                            {
+                                <input type="number" id="txtBox_modelYear" placeholder="2024" @bind="editableCarModel.Year" class="form-control" />
+                            }
+                            else
+                            {
+                                @model.Year
+                            }
+                        </td>
+                        <td>
+                            @if (model.Id == editableCarModel?.Id)
+                            {
+                                <input type="number" id="txtBox_collectionOrder" placeholder="1" @bind="editableCarModel.CollectionOrder" class="form-control" />
+                            }
+                            else
+                            {
+                                @model.CollectionOrder
+                            }
+                        </td>
+                        <td>
+                            @if (model.Id == editableCarModel?.Id)
+                            {
+                                <input type="text" id="txtBox_color" placeholder="Color" @bind="editableCarModel.Color" class="form-control" />
+                            }
+                            else
+                            {
+                                @model.Color
+                            }
+                        </td>
+                        <td>
+                            @if (model.Id == editableCarModel?.Id)
+                            {
+                                <input type="text" id="txtBox_description" placeholder="Description" @bind="editableCarModel.Description" class="form-control" />
+                            }
+                            else
+                            {
+                                @model.Description
+                            }
+                        </td>
+                        <td class="align-middle">
+                            @if (model.Id == editableCarModel?.Id)
+                            {
+                                <button class="btn btn-primary btn-sm" @onclick="SaveChanges"><i class="fa fa-save"></i></button>
+                                <button class="btn btn-secondary btn-sm" @onclick="CancelEditing"><i class="fa fa-times"></i></button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<CarModel> models;
+    private List<CarModel> sortedModels;
+    private CarModel? editableCarModel;
+    private List<Manufacturer> manufacturers;
+    private List<ModelCollection> collections;
+    private string sortColumn;
+    private bool ascending = true;
+    private string searchTerm;
+    private bool isNew = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        models = await httpClient.GetFromJsonAsync<List<CarModel>>(ApiRoutes.Model.GetAll);
+        Sort("modelName");
+    }
+
+    private void Sort(string column)
+    {
+        if (column == sortColumn)
+        {
+            ascending = !ascending;
+        }
+        else
+        {
+            sortColumn = column;
+            ascending = true;
+        }
+
+        switch (column)
+        {
+            case "modelName":
+                sortedModels = ascending ? models.OrderBy(g => g.ModelName).ToList() : models.OrderByDescending(g => g.ModelName).ToList();
+                break;
+            case "modelCode":
+                sortedModels = ascending ? models.OrderBy(g => g.ModelCode).ToList() : models.OrderByDescending(g => g.ModelCode).ToList();
+                break;
+            case "collection":
+                sortedModels = ascending ? models.OrderBy(g => g.ModelCollection.Name).ToList() : models.OrderByDescending(g => g.ModelCollection.Name).ToList();
+                break;
+            default:
+                sortedModels = models;
+                break;
+        }
+    }
+
+    private async void EditCarModel(CarModel model)
+    {
+        editableCarModel = models.First(g => g.Id == model.Id);
+        manufacturers = await httpClient.GetFromJsonAsync<List<Manufacturer>>(ApiRoutes.Manufacturer.GetAll);
+        collections = await httpClient.GetFromJsonAsync<List<ModelCollection>>(ApiRoutes.Collection.GetAll);
+    }
+
+    private void CancelEditing()
+    {
+        editableCarModel = null;
+        isNew = false;
+    }
+
+    private async Task SaveChanges()
+    {
+        HttpResponseMessage? res;
+        if (isNew && editableCarModel != null)
+        {
+            var newModel = new CarModelCreateBindingModel()
+                {
+                    ModelCode = editableCarModel.ModelCode,
+                    ModelName = editableCarModel.ModelName,
+                    ManufacturerId = editableCarModel.ManufacturerId.ToString(),
+                    ModelCollectionId = editableCarModel.ModelCollectionId.ToString(),
+                    Color = editableCarModel.Color,
+                    Description = editableCarModel.Description,
+                    CollectionOrder = editableCarModel.CollectionOrder,
+                    Year = editableCarModel.Year
+                };
+            var id = editableCarModel.ModelCollectionId.ToString();
+            newModel.ModelCollectionId = id;
+            newModel.ModelCollectionId = newModel.ModelCollectionId;
+            res = await httpClient.PostAsJsonAsync(ApiRoutes.Model.Create, newModel);      
+        }
+        else
+        {
+            res = await httpClient.PostAsJsonAsync(ApiRoutes.Model.Edit, editableCarModel);
+        }
+
+        if (res.IsSuccessStatusCode)
+        {
+            // Update the collection in the list
+            isNew = false;
+            editableCarModel = null;
+
+            models = await httpClient.GetFromJsonAsync<List<CarModel>>(ApiRoutes.Model.GetAll);
+        }
+        else
+        {
+            // Handle error
+        }
+    }
+
+    private async Task AddNewRow()
+    {
+        // Add new row logic
+        var newModel = new CarModel();
+
+        manufacturers = await httpClient.GetFromJsonAsync<List<Manufacturer>>(ApiRoutes.Manufacturer.GetAll);
+        collections = await httpClient.GetFromJsonAsync<List<ModelCollection>>(ApiRoutes.Collection.GetAll);
+        models.Add(newModel); // Add an empty car object to the list
+        editableCarModel = newModel;
+        isNew = true;
+    }
+}

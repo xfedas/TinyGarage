@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyGarage.Web", "TinyGarag
 		{1DA966C5-82B9-40C9-808A-9BD6F6A77758} = {1DA966C5-82B9-40C9-808A-9BD6F6A77758}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyGarage.Models", "TinyGarage.Models\TinyGarage.Models.csproj", "{EF0B7B4E-BE7A-44AA-8500-B7319383E5D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyGarage.Models", "TinyGarage.Models\TinyGarage.Models.csproj", "{EF0B7B4E-BE7A-44AA-8500-B7319383E5D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -48,8 +48,5 @@ namespace TinyGarage.Server.BindingModels
         public int? CollectionOrder { get; set; }
         public string Color { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-
-        public IEnumerable<Manufacturer> AvailableManufacturers { get; set; }
-        public IEnumerable<ModelCollection> AvailableCollections { get; set; }
     }
 }

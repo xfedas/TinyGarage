@@ -63,13 +63,16 @@ namespace TinyGarage.Api.Services
     {
         public async Task<Guid?> Create(CarModelCreateBindingModel model)
         {
+            var collection = await _repository.Get<ModelCollection>(Guid.Parse(model.ModelCollectionId));
+            var manufacturer = await _repository.Get<Manufacturer>(Guid.Parse(model.ManufacturerId));
+
             CarModel entity = new CarModel()
             {
                 Id = Guid.NewGuid(),
                 ModelName = model.ModelName,
                 ModelCode = model.ModelCode,
-                ModelCollection = await _repository.Get<ModelCollection>(Guid.Parse(model.ModelCollectionId)),
-                Manufacturer = await _repository.Get<Manufacturer>(Guid.Parse(model.ManufacturerId)),
+                ModelCollection = collection,
+                Manufacturer = manufacturer,
                 Description = model.Description,
                 Color = model.Color,
                 CollectionOrder = model.CollectionOrder,
